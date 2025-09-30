@@ -36,36 +36,45 @@ func (m AddFormModel) Init() tea.Cmd {
 	return nil
 }
 
+// Update handles keyboard input and state changes
 func (m AddFormModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "esc":
+			// Cancel form and quit
 			return m, tea.Quit
+
 		case "enter":
+			// Move to next field or submit on last field
 			if m.focusIndex == len(m.fields)-1 {
-				// last field - submit the form
 				m.submitted = true
 				return m, tea.Quit
 			}
 			m.focusIndex++
+
 		case "tab":
+			// Move to next field (wrap to first)
 			m.focusIndex++
 			if m.focusIndex >= len(m.fields) {
 				m.focusIndex = 0
 			}
+
 		case "shift+tab":
+			// Move to previous field (wrap to last)
 			m.focusIndex--
 			if m.focusIndex < 0 {
 				m.focusIndex = len(m.fields) - 1
 			}
+
 		case "backspace":
+			// Delete last character from current field
 			if len(m.fields[m.focusIndex].value) > 0 {
 				m.fields[m.focusIndex].value = m.fields[m.focusIndex].value[:len(m.fields[m.focusIndex].value)-1]
 			}
 
 		default:
-			// Add character to current field
+			// Add typed character to current field
 			m.fields[m.focusIndex].value += msg.String()
 		}
 	}

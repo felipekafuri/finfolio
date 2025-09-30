@@ -8,24 +8,20 @@ import (
 
 // ParseFormData converts raw form strings into an investment
 func ParseFormData(data map[string]string) (*Investment, error) {
-	// Parse application date
 	appDate, err := time.Parse("2006-01-02", data["Application Date"])
 	if err != nil {
 		return nil, errors.New("invalid application date format (use YYYY-MM-DD)")
 	}
 
-	// Parse value
 	value, err := strconv.ParseFloat(data["Value"], 64)
 	if err != nil {
 		return nil, errors.New("invalid value format")
 	}
 
-	// Parse redemption date
 	redDate, err := time.Parse("2006-01-02", data["Redemption Date"])
 	if err != nil {
 		return nil, errors.New("invalid redemption date format (use YYYY-MM-DD)")
 	}
-	// Validate dates
 	if redDate.Before(appDate) {
 		return nil, errors.New("redemption date cannot be before application date")
 	}
@@ -40,6 +36,7 @@ func ParseFormData(data map[string]string) (*Investment, error) {
 		Bank:            data["Bank"],
 		Title:           data["Title"],
 		PeriodDays:      periodDays,
+		// TODO: Add this part
 		// GrossReturn, Tax, etc. will be added later when user updates the investment
 	}
 
