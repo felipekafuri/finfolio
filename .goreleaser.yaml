@@ -16,7 +16,7 @@ builds:
   - main: ./main.go
     binary: finfolio
     env:
-      - CGO_ENABLED=0
+      - CGO_ENABLED=1
     goos:
       - linux
       - windows
@@ -24,6 +24,12 @@ builds:
     goarch:
       - amd64
       - arm64
+    # CGO requires proper cross-compilation setup
+    ignore:
+      - goos: darwin
+        goarch: amd64
+      - goos: windows
+        goarch: arm64
 
 archives:
   - formats: [tar.gz]

@@ -4,29 +4,36 @@ Copyright © 2025 NAME HERE feliperk.dev@gmail.com
 package cmd
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/felipekafuri/finfolio/internal/database"
 	"github.com/spf13/cobra"
 )
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "finfolio",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Short: "Manage your fixed-income investment portfolio",
+	Long: `Finfolio is a CLI tool for managing and tracking your fixed-income investments.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+Track CDBs, LCIs, LCAs, and other fixed-income investments with ease.
+Calculate returns, taxes, and monitor your portfolio performance.`,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		// Initialize database before any command runs
+		if err := database.Init("./finfolio.db"); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to initialize database: %v\n", err)
+			os.Exit(1)
+		}
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	// Ensure database is closed on exit
+	defer database.Close()
+
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

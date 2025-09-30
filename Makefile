@@ -47,3 +47,24 @@ lint: ## Run linter (requires golangci-lint)
 	golangci-lint run
 
 check: fmt lint test ## Run all checks (format, lint, test)
+
+
+# Database migrations
+.PHONY: migrate-create migrate-up migrate-down migrate-force migrate-status
+
+migrate-create: ## Create a new migration (prompts for name)
+	@read -p "Enter migration name: " name; \
+	migrate create -ext sql -dir db/migrations -seq $$name
+
+migrate-up: ## Run all pending migrations
+	migrate -path db/migrations -database "sqlite3://./finfolio.db" up
+
+migrate-down: ## Rollback the last migration
+	migrate -path db/migrations -database "sqlite3://./finfolio.db" down
+
+migrate-force: ## Force set migration version (use with caution)
+	@read -p "Enter version to force: " version; \
+	migrate -path db/migrations -database "sqlite3://./finfolio.db" force $$version
+
+migrate-status: ## Show current migration version
+	migrate -path db/migrations -database "sqlite3://./finfolio.db" version

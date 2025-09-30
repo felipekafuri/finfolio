@@ -43,18 +43,14 @@ The CLI will automatically calculate returns, taxes, and percentages when you up
 			data := m.GetInvestmentData()
 
 			// Parse and validate the form data
-			inv, err := investment.ParseFormData(data)
+			_, err := investment.ParseFormData(data)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+				fmt.Fprintf(os.Stderr, "\n❌ Error: %v\n\n", err)
 				os.Exit(1)
 			}
 
 			// TODO: Save to database
-			fmt.Printf("✓ Investment created successfully!\n")
-			fmt.Printf("  Bank: %s\n", inv.Bank)
-			fmt.Printf("  Title: %s\n", inv.Title)
-			fmt.Printf("  Value: %.2f\n", inv.Value)
-			fmt.Printf("  Period: %d days\n", inv.PeriodDays)
+			// Success message is already shown in the TUI
 		}
 	},
 }
