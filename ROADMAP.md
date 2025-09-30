@@ -12,15 +12,18 @@ This document outlines the planned features and improvements for Finfolio.
 
 ## Short-term Goals (v0.2.0 - v0.4.0)
 
-### Database Integration (v0.2.0)
+### Database Integration (v0.2.0) - IN PROGRESS
 
 **Goal:** Persist investment data locally using SQLite
 
-- [ ] Add SQLite dependency (`modernc.org/sqlite` or `mattn/go-sqlite3`)
-- [ ] Create database schema
-  - [ ] `investments` table (id, application_date, value, redemption_date, bank, title, gross_return, tax, net_return, period_days, return_percent, annualized_rate, created_at, updated_at)
+- ✅ Add SQLite dependency (`mattn/go-sqlite3`)
+- ✅ Create database schema
+  - ✅ `investments` table (id, application_date, value, redemption_date, bank, title, period_days, created_at)
   - [ ] `selic_rates` table (id, date, rate, created_at)
-- [ ] Create database initialization and migration system
+- ✅ Create database initialization and migration system
+  - ✅ Set up `golang-migrate` for migrations
+  - ✅ Create migration files (up/down)
+  - ✅ Makefile commands for migration management
 - [ ] Implement repository layer (`internal/investment/repository.go`)
   - [ ] `Create(investment)` - Save new investment
   - [ ] `FindAll()` - Get all investments
@@ -28,16 +31,17 @@ This document outlines the planned features and improvements for Finfolio.
   - [ ] `Update(investment)` - Update investment
   - [ ] `Delete(id)` - Remove investment
 - [ ] Update `add` command to save to database
-- [ ] Add database file path configuration (default: `~/.finfolio/finfolio.db`)
+- ✅ Database file path configured (`./finfolio.db`)
 
-**Files to create:**
+**Files created:**
 ```
 internal/
   database/
-    sqlite.go         # Connection and setup
-    migrations.go     # Schema migrations
-  investment/
-    repository.go     # Data access layer
+    db.go             # ✅ Connection, setup, and migrations
+db/
+  migrations/
+    000001_create_investments_table.up.sql   # ✅
+    000001_create_investments_table.down.sql # ✅
 ```
 
 ### List Command (v0.2.0)
